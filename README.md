@@ -200,5 +200,3 @@ showQuestion();
 </script>
 </body>
 </html>
-
-</html>

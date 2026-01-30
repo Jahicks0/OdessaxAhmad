@@ -1,0 +1,278 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>4 Questions</title>
+  <style>
+    body{
+      margin:0;
+      min-height:100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(circle at top, #1b1b2a, #0b0b12);
+      color:#fff;
+    }
+    .card{
+      width:min(720px, 92vw);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 18px;
+      padding: 22px;
+      box-shadow: 0 18px 60px rgba(0,0,0,0.35);
+      backdrop-filter: blur(10px);
+    }
+    .top{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+    }
+    .badge{
+      font-size:12px;
+      opacity:0.9;
+      border: 1px solid rgba(255,255,255,0.18);
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+    }
+    .progress{
+      flex:1;
+      height:10px;
+      border-radius:999px;
+      background: rgba(255,255,255,0.12);
+      overflow:hidden;
+      margin-left:10px;
+    }
+    .bar{
+      height:100%;
+      width:0%;
+      background: rgba(255,255,255,0.85);
+      border-radius:999px;
+      transition: width 260ms ease;
+    }
+    h1{
+      font-size: 20px;
+      margin: 6px 0 10px;
+      letter-spacing: 0.2px;
+    }
+    p{
+      margin:0 0 14px;
+      opacity:0.9;
+      line-height: 1.4;
+    }
+    .qwrap{
+      margin-top: 12px;
+      padding: 16px;
+      border-radius: 14px;
+      background: rgba(0,0,0,0.18);
+      border: 1px solid rgba(255,255,255,0.10);
+    }
+    .question{
+      font-size: 18px;
+      margin: 0 0 12px;
+    }
+    .choices{
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:10px;
+    }
+    button.choice{
+      width:100%;
+      text-align:left;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color:#fff;
+      cursor:pointer;
+      transition: transform 120ms ease, background 120ms ease, border-color 120ms ease;
+    }
+    button.choice:hover{
+      transform: translateY(-1px);
+      background: rgba(255,255,255,0.12);
+      border-color: rgba(255,255,255,0.24);
+    }
+    button.choice:active{
+      transform: translateY(0px);
+    }
+    .inputRow{
+      display:flex;
+      gap:10px;
+      margin-top: 10px;
+    }
+    input{
+      flex:1;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.16);
+      background: rgba(255,255,255,0.08);
+      color:#fff;
+      outline:none;
+    }
+    input::placeholder{ color: rgba(255,255,255,0.6); }
+    .primary{
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.85);
+      color:#111;
+      cursor:pointer;
+      font-weight: 650;
+    }
+    .summary{
+      margin-top: 14px;
+      padding: 14px;
+      border-radius: 14px;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.14);
+    }
+    .summary pre{
+      margin:0;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      font-size: 13px;
+      opacity: 0.95;
+    }
+    .hidden{ display:none; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="top">
+      <div class="badge" id="stepBadge">Question 1 of 4</div>
+      <div class="progress" aria-label="progress">
+        <div class="bar" id="bar"></div>
+      </div>
+    </div>
+
+    <h1>Quick Questions</h1>
+    <p>Answer each question to reveal the next one.</p>
+
+    <div class="qwrap" id="qwrap">
+      <div class="question" id="questionText"></div>
+
+      <!-- Multiple choice -->
+      <div class="choices" id="choices"></div>
+
+      <!-- Short answer -->
+      <div class="inputRow hidden" id="inputRow">
+        <input id="textInput" type="text" placeholder="Type your answer..." />
+        <button class="primary" id="submitText">Submit</button>
+      </div>
+
+      <div class="summary hidden" id="summary">
+        <h2 style="margin:0 0 10px; font-size:16px;">Your answers</h2>
+        <pre id="answersOut"></pre>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Edit these 4 questions however you want:
+    const questions = [
+      {
+        type: "choice",
+        text: "Question 1: Pick a color",
+        options: ["Red", "Blue", "Green", "Purple"]
+      },
+      {
+        type: "text",
+        text: "Question 2: What’s your name?"
+      },
+      {
+        type: "choice",
+        text: "Question 3: Choose a vibe",
+        options: ["Chill", "Hype", "Romantic", "Focused"]
+      },
+      {
+        type: "text",
+        text: "Question 4: What’s one goal for this week?"
+      }
+    ];
+
+    let index = 0;
+    const answers = [];
+
+    const stepBadge = document.getElementById("stepBadge");
+    const bar = document.getElementById("bar");
+    const questionText = document.getElementById("questionText");
+    const choices = document.getElementById("choices");
+    const inputRow = document.getElementById("inputRow");
+    const textInput = document.getElementById("textInput");
+    const submitText = document.getElementById("submitText");
+    const summary = document.getElementById("summary");
+    const answersOut = document.getElementById("answersOut");
+
+    function updateProgress() {
+      const pct = (index / questions.length) * 100;
+      bar.style.width = `${pct}%`;
+      stepBadge.textContent = `Question ${Math.min(index + 1, questions.length)} of ${questions.length}`;
+    }
+
+    function renderQuestion() {
+      updateProgress();
+      summary.classList.add("hidden");
+      choices.innerHTML = "";
+      inputRow.classList.add("hidden");
+      textInput.value = "";
+
+      if (index >= questions.length) {
+        // Finished
+        bar.style.width = "100%";
+        stepBadge.textContent = `Done`;
+        questionText.textContent = "All done ✅";
+        summary.classList.remove("hidden");
+
+        const pretty = questions.map((q, i) => {
+          const a = answers[i] ?? "(no answer)";
+          return `${i + 1}. ${q.text}\n   → ${a}`;
+        }).join("\n\n");
+
+        answersOut.textContent = pretty;
+        return;
+      }
+
+      const q = questions[index];
+      questionText.textContent = q.text;
+
+      if (q.type === "choice") {
+        q.options.forEach(opt => {
+          const btn = document.createElement("button");
+          btn.className = "choice";
+          btn.type = "button";
+          btn.textContent = opt;
+          btn.addEventListener("click", () => {
+            answers[index] = opt;
+            index++;
+            renderQuestion();
+          });
+          choices.appendChild(btn);
+        });
+      } else {
+        inputRow.classList.remove("hidden");
+        textInput.focus();
+
+        const submit = () => {
+          const val = textInput.value.trim();
+          if (!val) return;
+          answers[index] = val;
+          index++;
+          renderQuestion();
+        };
+
+        submitText.onclick = submit;
+        textInput.onkeydown = (e) => {
+          if (e.key === "Enter") submit();
+        };
+      }
+    }
+
+    renderQuestion();
+  </script>
+</body>
+</html>

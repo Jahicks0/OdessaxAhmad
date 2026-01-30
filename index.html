@@ -39,29 +39,14 @@ body::after{ bottom:-170px; right:-170px; animation-delay:3s; }
 }
 
 /* floating hearts */
-.hearts{
-  position:absolute;
-  inset:0;
-  overflow:hidden;
-  pointer-events:none;
-  z-index:1;
-}
-.heart{
-  position:absolute;
-  bottom:-40px;
-  font-size:22px;
-  animation: rise linear forwards;
-}
-@keyframes rise{
-  0%{transform:translateY(0);opacity:0;}
-  10%{opacity:1;}
-  100%{transform:translateY(-120vh);opacity:0;}
-}
+.hearts{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:1;}
+.heart{position:absolute;bottom:-40px;font-size:22px;animation: rise linear forwards;}
+@keyframes rise{0%{transform:translateY(0);opacity:0;}10%{opacity:1;}100%{transform:translateY(-120vh);opacity:0;}}
 
 .card{
   position:relative;
   z-index:2;
-  width:min(860px,95vw);
+  width:min(950px,95vw);
   background:rgba(255,255,255,0.15);
   border:1px solid rgba(255,255,255,0.3);
   border-radius:20px;
@@ -70,7 +55,7 @@ body::after{ bottom:-170px; right:-170px; animation-delay:3s; }
   text-align:center;
 }
 
-/* Big glowing love title */
+/* Romantic banner title */
 h1{
   margin:0 0 18px;
   font-size:42px;
@@ -78,14 +63,9 @@ h1{
   text-align:center;
   letter-spacing:2px;
   color:#fff;
-  text-shadow:
-    0 0 10px #ffb6d9,
-    0 0 20px #ff69b4,
-    0 0 40px #ff4d88,
-    0 0 60px #ff1a75;
+  text-shadow:0 0 10px #ffb6d9,0 0 20px #ff69b4,0 0 40px #ff4d88,0 0 60px #ff1a75;
   animation: glowPulse 2.5s ease-in-out infinite alternate;
 }
-
 @keyframes glowPulse{
   from{ text-shadow:0 0 8px #ffb6d9,0 0 18px #ff69b4,0 0 30px #ff4d88;}
   to{ text-shadow:0 0 16px #ffcce6,0 0 32px #ff85c1,0 0 55px #ff1a75;}
@@ -102,14 +82,30 @@ button{padding:12px 16px;border-radius:12px;border:none;font-weight:bold;cursor:
 .feedback{margin-top:10px;font-weight:bold;min-height:24px;}
 .hidden{display:none;}
 
-.plan{
-  margin-top:15px;
-  background:rgba(255,255,255,0.18);
-  padding:16px;
-  border-radius:14px;
+.plan-intro{margin-bottom:15px;}
+
+.plan-grid{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:15px;
+}
+.day-box{
+  background:rgba(255,255,255,0.2);
+  border-radius:16px;
+  padding:15px;
   text-align:left;
 }
-.plan ul{padding-left:18px;}
+.day-box h3{
+  margin-top:0;
+  text-align:center;
+  border-bottom:1px solid rgba(255,255,255,0.4);
+  padding-bottom:6px;
+}
+.day-box ul{padding-left:18px;}
+
+@media(max-width:700px){
+  .plan-grid{grid-template-columns:1fr;}
+}
 </style>
 </head>
 
@@ -133,28 +129,34 @@ button{padding:12px 16px;border-radius:12px;border:none;font-weight:bold;cursor:
   <div id="result" class="hidden">
     <h2>Weekend Plans 💕</h2>
 
-    <div class="plan">
+    <div class="plan-intro">
       Lets have a beautiful weekend, create special memories together as always,
       laugh but most importantly spend quality time with each other.
       I love you baby so here is a lil run down on how the weekend is about to go.
+    </div>
 
-      <h3>Saturday</h3>
-      <ul>
-        <li>I reserved a room at <b>Arundel Hotel</b> for Saturday night.</li>
-        <li>I will get you at <b>5:30 PM</b>.</li>
-        <li><b>Dinner</b> is at <b>7:00 PM</b>.</li>
-        <li>Arrive back at the hotel around <b>10:00 PM</b>.</li>
-        <li>Card games, drinking, etc.</li>
-        <li>Fun & laughter 😄</li>
-      </ul>
+    <div class="plan-grid">
+      <div class="day-box">
+        <h3>Saturday</h3>
+        <ul>
+          <li>I reserved a room at Arundel Hotel for Saturday night</li>
+          <li>I will get you at 5:30 PM</li>
+          <li>Dinner at 7:00 PM</li>
+          <li>Back to hotel around 10:00 PM</li>
+          <li>Card games, drinking, etc</li>
+          <li>Fun & laughter 😄</li>
+        </ul>
+      </div>
 
-      <h3>Sunday</h3>
-      <ul>
-        <li><b>Brunch</b> at <b>12:00 PM</b>.</li>
-        <li>Leave brunch back to my house.</li>
-        <li>Paint a picture but switch off every <b>2 minutes</b> 🎨</li>
-        <li>Watch a movie with snacks/popcorn 🍿</li>
-      </ul>
+      <div class="day-box">
+        <h3>Sunday</h3>
+        <ul>
+          <li>Brunch at 12:00 PM</li>
+          <li>Back to my house after brunch</li>
+          <li>Paint a picture switching every 2 minutes 🎨</li>
+          <li>Watch a movie with snacks & popcorn 🍿</li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>

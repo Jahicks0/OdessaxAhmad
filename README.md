@@ -1,202 +1,300 @@
-
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Love Quiz</title>
-<style>
-body{
-  margin:0;
-  min-height:100vh;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-family: system-ui, sans-serif;
-  background: radial-gradient(circle at top, #1b1b2a, #0b0b12);
-  color:#fff;
-}
-.card{
-  width:min(860px,95vw);
-  background:rgba(255,255,255,0.08);
-  border:1px solid rgba(255,255,255,0.14);
-  border-radius:18px;
-  padding:22px;
-  backdrop-filter:blur(10px);
-  text-align:center;
-}
-.progress{
-  height:10px;
-  background:rgba(255,255,255,0.15);
-  border-radius:999px;
-  margin-bottom:15px;
-  overflow:hidden;
-}
-.bar{
-  height:100%;
-  width:0;
-  background:#ff69b4;
-  transition:width .3s;
-}
-.question{font-size:20px;margin-bottom:10px;}
-.row{
-  display:flex;
-  gap:10px;
-  justify-content:center;
-  align-items:center;
-}
-input{
-  width:min(520px, 70%);
-  padding:12px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,0.2);
-  background:rgba(255,255,255,0.08);
-  color:#fff;
-  text-align:center;
-}
-button{
-  padding:12px 16px;
-  border-radius:12px;
-  border:none;
-  font-weight:bold;
-  cursor:pointer;
-}
-.primary{background:#ff69b4;color:#111;}
-.feedback{
-  margin-top:10px;
-  font-weight:bold;
-  color:#ff69b4;
-  min-height:24px;
-}
-.hidden{display:none;}
 
-.plan{
-  margin-top:15px;
-  background:rgba(255,255,255,0.07);
-  padding:16px;
-  border-radius:14px;
-  border:1px solid rgba(255,255,255,0.12);
-  text-align:left;
-}
-.plan h3{margin:0 0 8px;font-size:16px;}
-.plan ul{
-  margin:0 0 14px;
-  padding-left:18px;
-  line-height:1.5;
-  color:rgba(255,255,255,0.9);
-}
-.tag{
-  display:inline-block;
-  margin:8px 0 14px;
-  font-size:12px;
-  border:1px solid rgba(255,255,255,0.18);
-  padding:6px 10px;
-  border-radius:999px;
-  background:rgba(255,255,255,0.06);
-}
-.intro{
-  margin:10px 0 16px;
-  line-height:1.5;
-  color:rgba(255,255,255,0.95);
-}
+<style>
+  body{
+    margin:0;
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-family: system-ui, sans-serif;
+    background: radial-gradient(circle at top, #ff9ecb, #ff4d88 60%, #b3003c);
+    color:#fff;
+    overflow:hidden;
+    position:relative;
+  }
+
+  /* soft glowing blobs */
+  body::before, body::after{
+    content:"";
+    position:absolute;
+    width:650px;
+    height:650px;
+    background: radial-gradient(circle, rgba(255,255,255,0.25), transparent 60%);
+    border-radius:50%;
+    animation: floatGlow 10s ease-in-out infinite alternate;
+    z-index:0;
+  }
+  body::before{ top:-170px; left:-170px; }
+  body::after{ bottom:-170px; right:-170px; animation-delay:3s; }
+
+  @keyframes floatGlow{
+    from{ transform: translateY(0px); }
+    to{ transform: translateY(40px); }
+  }
+
+  /* Floating hearts layer */
+  .hearts{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+    pointer-events:none;
+    z-index:1;
+  }
+  .heart{
+    position:absolute;
+    bottom:-40px;
+    font-size: 22px;
+    opacity:0.85;
+    animation: rise linear forwards;
+    filter: drop-shadow(0 6px 10px rgba(0,0,0,0.25));
+    will-change: transform, opacity;
+  }
+  @keyframes rise{
+    0%   { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    10%  { opacity: 0.95; }
+    100% { transform: translateY(-120vh) translateX(var(--drift)) rotate(var(--rot)); opacity: 0; }
+  }
+
+  .card{
+    position:relative;
+    z-index:2;
+    width:min(860px,95vw);
+    background:rgba(255,255,255,0.15);
+    border:1px solid rgba(255,255,255,0.3);
+    border-radius:20px;
+    padding:22px;
+    backdrop-filter:blur(12px);
+    text-align:center;
+    box-shadow:0 20px 60px rgba(0,0,0,0.25);
+  }
+
+  .progress{
+    height:10px;
+    background:rgba(255,255,255,0.25);
+    border-radius:999px;
+    margin-bottom:15px;
+    overflow:hidden;
+  }
+  .bar{
+    height:100%;
+    width:0;
+    background:#fff;
+    transition:width .3s;
+  }
+
+  .question{font-size:20px;margin-bottom:10px;}
+  .row{
+    display:flex;
+    gap:10px;
+    justify-content:center;
+    align-items:center;
+  }
+  input{
+    width:min(520px, 70%);
+    padding:12px;
+    border-radius:12px;
+    border:1px solid rgba(255,255,255,0.4);
+    background:rgba(255,255,255,0.2);
+    color:#fff;
+    text-align:center;
+    outline:none;
+  }
+  input::placeholder{ color: rgba(255,255,255,0.8); }
+
+  button{
+    padding:12px 16px;
+    border-radius:12px;
+    border:none;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .primary{
+    background:#fff;
+    color:#b3003c;
+  }
+  .feedback{
+    margin-top:10px;
+    font-weight:bold;
+    color:#fff;
+    min-height:24px;
+  }
+  .hidden{display:none;}
+
+  .plan{
+    margin-top:15px;
+    background:rgba(255,255,255,0.18);
+    padding:16px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,0.4);
+    text-align:left;
+  }
+  .plan h3{margin:0 0 8px;font-size:16px;}
+  .plan ul{
+    margin:0 0 14px;
+    padding-left:18px;
+    line-height:1.5;
+    color:rgba(255,255,255,0.95);
+  }
+  .tag{
+    display:inline-block;
+    margin:8px 0 14px;
+    font-size:12px;
+    border:1px solid rgba(255,255,255,0.4);
+    padding:6px 10px;
+    border-radius:999px;
+    background:rgba(255,255,255,0.2);
+  }
+  .intro{
+    margin:10px 0 16px;
+    line-height:1.5;
+    color:#fff;
+  }
 </style>
 </head>
+
 <body>
-<div class="card">
-  <div class="progress"><div class="bar" id="bar"></div></div>
+  <!-- Floating hearts -->
+  <div class="hearts" id="hearts"></div>
 
-  <div id="quiz">
-    <div class="question" id="questionText"></div>
-    <div class="row">
-      <input id="answerInput" placeholder="Type answer..." />
-      <button class="primary" id="nextBtn">➜</button>
+  <div class="card">
+    <div class="progress"><div class="bar" id="bar"></div></div>
+
+    <div id="quiz">
+      <div class="question" id="questionText"></div>
+      <div class="row">
+        <input id="answerInput" placeholder="Type answer..." />
+        <button class="primary" id="nextBtn">➜</button>
+      </div>
+      <div class="feedback" id="feedback"></div>
     </div>
-    <div class="feedback" id="feedback"></div>
+
+    <div id="result" class="hidden">
+      <h2>Weekend Plans 💕</h2>
+      <div class="tag">Arundel Hotel • Dinner • Brunch • Paint + Movie</div>
+
+      <div class="intro">
+        Lets have a beautiful weekend, create special memories together as always,
+        laugh but most importantly spend quality time with each other.
+        I love you baby so here is a lil run down on how the weekend is about to go.
+      </div>
+
+      <div class="plan">
+        <h3>Saturday</h3>
+        <ul>
+          <li>I reserved a room at <b>Arundel Hotel</b> for Saturday night.</li>
+          <li>I will get you at <b>5:30 PM</b>.</li>
+          <li><b>Dinner</b> is at <b>7:00 PM</b>.</li>
+          <li>Arrive back at the hotel around <b>10:00 PM</b>.</li>
+          <li>Card games, drinking, etc.</li>
+          <li>Fun &amp; laughter 😄</li>
+        </ul>
+
+        <h3>Sunday</h3>
+        <ul>
+          <li><b>Brunch</b> at <b>12:00 PM</b>.</li>
+          <li>Leave brunch back to my house.</li>
+          <li>Paint a picture but switch off every <b>2 minutes</b> 🎨</li>
+          <li>Watch a movie with snacks/popcorn 🍿</li>
+        </ul>
+      </div>
+    </div>
   </div>
-
-  <div id="result" class="hidden">
-    <h2>Weekend Plans 💕</h2>
-    <div class="tag">Arundel Hotel • Dinner • Brunch • Paint + Movie</div>
-
-    <div class="intro">
-      Lets have a beautiful weekend, create special memories together as always,
-      laugh but most importantly spend quality time with each other.
-      I love you baby so here is a lil run down on how the weekend is about to go.
-    </div>
-
-    <div class="plan">
-      <h3>Saturday</h3>
-      <ul>
-        <li>I reserved a room at <b>Arundel Hotel</b> for Saturday night.</li>
-        <li>I will get you at <b>5:30 PM</b>.</li>
-        <li><b>Dinner</b> is at <b>7:00 PM</b>.</li>
-        <li>Arrive back at the hotel around <b>10:00 PM</b>.</li>
-        <li>Card games, drinking, etc.</li>
-        <li>Fun &amp; laughter 😄</li>
-      </ul>
-
-      <h3>Sunday</h3>
-      <ul>
-        <li><b>Brunch</b> at <b>12:00 PM</b>.</li>
-        <li>Leave brunch back to my house.</li>
-        <li>Paint a picture but switch off every <b>2 minutes</b> 🎨</li>
-        <li>Watch a movie with snacks/popcorn 🍿</li>
-      </ul>
-    </div>
-  </div>
-</div>
 
 <script>
-const questions = [
-  { q: "What is your favorite color now?", a: "pink" },
-  { q: "Is seafood your favorite food?", a: "yes" }, // ✅ CHANGED HERE
-  { q: "whats one of the spots we are going in july?", a: "jamaica" },
-  { q: "Are you ready for valentines?", a: "any" }
-];
+  // Quiz questions + answers
+  const questions = [
+    { q: "What is your favorite color now?", a: "pink" },
+    { q: "Is seafood your favorite food?", a: "yes" },
+    { q: "whats one of the spots we are going in july?", a: "jamaica" },
+    { q: "Are you ready for valentines?", a: "any" }
+  ];
 
-let index = 0;
-const bar = document.getElementById("bar");
-const questionText = document.getElementById("questionText");
-const input = document.getElementById("answerInput");
-const nextBtn = document.getElementById("nextBtn");
-const feedback = document.getElementById("feedback");
-const result = document.getElementById("result");
-const quiz = document.getElementById("quiz");
+  let index = 0;
 
-function updateBar(){
-  bar.style.width = (index / questions.length * 100) + "%";
-}
+  const bar = document.getElementById("bar");
+  const questionText = document.getElementById("questionText");
+  const input = document.getElementById("answerInput");
+  const nextBtn = document.getElementById("nextBtn");
+  const feedback = document.getElementById("feedback");
+  const result = document.getElementById("result");
+  const quiz = document.getElementById("quiz");
 
-function showQuestion(){
-  feedback.textContent = "";
-  questionText.textContent = questions[index].q;
-  input.value = "";
-  input.focus();
-  updateBar();
-}
-
-nextBtn.onclick = () => {
-  const userAnswer = input.value.trim().toLowerCase();
-  if(!userAnswer) return;
-
-  const correct = questions[index].a;
-  if(correct === "any" || userAnswer === correct){
-    feedback.textContent = "CORRECT! 💖";
-    setTimeout(() => {
-      index++;
-      if(index < questions.length){
-        showQuestion();
-      } else {
-        bar.style.width = "100%";
-        quiz.classList.add("hidden");
-        result.classList.remove("hidden");
-      }
-    }, 800);
-  } else {
-    feedback.textContent = "Try again ❤️";
+  function updateBar(){
+    bar.style.width = (index / questions.length * 100) + "%";
   }
-};
 
-showQuestion();
+  function showQuestion(){
+    feedback.textContent = "";
+    questionText.textContent = questions[index].q;
+    input.value = "";
+    input.focus();
+    updateBar();
+  }
+
+  nextBtn.onclick = () => {
+    const userAnswer = input.value.trim().toLowerCase();
+    if(!userAnswer) return;
+
+    const correct = questions[index].a;
+
+    if(correct === "any" || userAnswer === correct){
+      feedback.textContent = "CORRECT! 💖";
+      setTimeout(() => {
+        index++;
+        if(index < questions.length){
+          showQuestion();
+        } else {
+          bar.style.width = "100%";
+          quiz.classList.add("hidden");
+          result.classList.remove("hidden");
+        }
+      }, 800);
+    } else {
+      feedback.textContent = "Try again ❤️";
+    }
+  };
+
+  input.addEventListener("keydown", (e) => {
+    if(e.key === "Enter") nextBtn.click();
+  });
+
+  showQuestion();
+
+  // Floating hearts generator
+  const heartsEl = document.getElementById("hearts");
+  const heartEmojis = ["💗","💖","💕","💘","❤️","💝"];
+
+  function spawnHeart(){
+    const h = document.createElement("div");
+    h.className = "heart";
+    h.textContent = heartEmojis[Math.floor(Math.random() * heartEmojis.length)];
+
+    const left = Math.random() * 100; // vw
+    const size = 16 + Math.random() * 20; // px
+    const duration = 5 + Math.random() * 5; // seconds
+    const drift = (Math.random() * 120 - 60).toFixed(0) + "px";
+    const rot = (Math.random() * 120 - 60).toFixed(0) + "deg";
+
+    h.style.left = left + "vw";
+    h.style.fontSize = size + "px";
+    h.style.animationDuration = duration + "s";
+    h.style.setProperty("--drift", drift);
+    h.style.setProperty("--rot", rot);
+
+    heartsEl.appendChild(h);
+
+    // cleanup
+    setTimeout(() => h.remove(), duration * 1000);
+  }
+
+  // spawn hearts continuously
+  setInterval(spawnHeart, 350);
 </script>
 </body>
-
+</html>

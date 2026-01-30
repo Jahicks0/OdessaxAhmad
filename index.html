@@ -70,17 +70,25 @@ body::after{ bottom:-170px; right:-170px; animation-delay:3s; }
   text-align:center;
 }
 
-/* ✨ MAGIC TITLE STYLE ✨ */
+/* 💖 BIG LOVE BANNER TITLE 💖 */
 h1{
-  margin-top:0;
-  font-size:34px;
+  margin:0 0 18px;
+  font-size:42px;
   font-family:"Brush Script MT","Lucida Handwriting",cursive;
+  text-align:center;
+  letter-spacing:2px;
   color:#fff;
   text-shadow:
     0 0 10px #ffb6d9,
     0 0 20px #ff69b4,
-    0 0 35px #ff4d88;
+    0 0 40px #ff4d88,
+    0 0 60px #ff1a75;
   animation: glowPulse 2.5s ease-in-out infinite alternate;
+}
+
+.card h1{
+  padding-bottom:12px;
+  border-bottom:2px solid rgba(255,255,255,0.4);
 }
 
 @keyframes glowPulse{
@@ -88,13 +96,13 @@ h1{
     text-shadow:
       0 0 8px #ffb6d9,
       0 0 18px #ff69b4,
-      0 0 28px #ff4d88;
+      0 0 30px #ff4d88;
   }
   to{
     text-shadow:
-      0 0 14px #ffcce6,
-      0 0 28px #ff85c1,
-      0 0 45px #ff4d88;
+      0 0 16px #ffcce6,
+      0 0 32px #ff85c1,
+      0 0 55px #ff1a75;
   }
 }
 
@@ -107,7 +115,6 @@ input{width:60%;padding:12px;border-radius:12px;border:1px solid rgba(255,255,25
 button{padding:12px 16px;border-radius:12px;border:none;font-weight:bold;cursor:pointer;}
 .primary{background:#fff;color:#b3003c;}
 .feedback{margin-top:10px;font-weight:bold;min-height:24px;}
-
 .hidden{display:none;}
 
 .plan{margin-top:15px;background:rgba(255,255,255,0.18);padding:16px;border-radius:14px;text-align:left;}
